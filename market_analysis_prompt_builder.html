@@ -1,0 +1,516 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Lato:wght@300;400;700&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1a1a2e;--ink2:#4a4a6a;--ink3:#8888aa;
+  --surface:#f8f7f4;--card:#ffffff;
+  --gold:#c9973a;--gold-light:#f5e6c8;
+  --teal:#1d7a6b;--teal-light:#e0f2ee;
+  --coral:#c94a3a;--coral-light:#fdeae8;
+  --border:#e2e0da;
+  --mono:'DM Mono',monospace;
+  --serif:'DM Serif Display',serif;
+  --sans:'Lato',sans-serif;
+}
+body{font-family:var(--sans);background:var(--surface);color:var(--ink);min-height:100vh}
+
+.header{padding:2rem 2rem 1.5rem;border-bottom:1px solid var(--border);background:var(--card)}
+.header-top{display:flex;align-items:baseline;gap:.75rem;margin-bottom:.25rem}
+.badge{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);background:var(--gold-light);padding:3px 10px;border-radius:2px}
+h1{font-family:var(--serif);font-size:22px;color:var(--ink);font-weight:400}
+.subtitle{font-size:13px;color:var(--ink3);line-height:1.5}
+
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--card);overflow-x:auto}
+.tab{padding:.75rem 1.25rem;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--teal);border-bottom-color:var(--teal)}
+
+.workspace{display:grid;grid-template-columns:300px 1fr;min-height:calc(100vh - 140px)}
+.sidebar{border-right:1px solid var(--border);background:var(--card);overflow-y:auto}
+.main-panel{padding:1.5rem;overflow-y:auto}
+
+.sidebar-section{border-bottom:1px solid var(--border);padding:1rem}
+.sidebar-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:.75rem}
+.field-group{margin-bottom:.75rem}
+.field-label{font-size:12px;color:var(--ink2);margin-bottom:.3rem;display:block}
+.field-input{width:100%;padding:7px 10px;font-size:13px;font-family:var(--sans);border:1px solid var(--border);border-radius:4px;color:var(--ink);background:var(--surface);outline:none;transition:border-color .15s}
+.field-input:focus{border-color:var(--teal)}
+.field-input::placeholder{color:var(--ink3)}
+textarea.field-input{resize:vertical;min-height:64px;line-height:1.5}
+select.field-input{cursor:pointer}
+
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.5rem 0;cursor:pointer}
+.toggle-name{font-size:13px;color:var(--ink2)}
+.toggle{width:36px;height:20px;border-radius:10px;border:1px solid var(--border);background:var(--surface);position:relative;transition:background .15s,border-color .15s;flex-shrink:0}
+.toggle.on{background:var(--teal);border-color:var(--teal)}
+.toggle::after{content:'';width:14px;height:14px;border-radius:50%;background:white;position:absolute;top:2px;left:2px;transition:left .15s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle.on::after{left:18px}
+
+.prompt-area{background:var(--card);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.prompt-toolbar{display:flex;align-items:center;justify-content:space-between;padding:.65rem 1rem;border-bottom:1px solid var(--border);background:var(--surface)}
+.prompt-toolbar-left{display:flex;align-items:center;gap:.5rem}
+.tool-label{font-size:11px;color:var(--ink3);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.btn{padding:5px 12px;font-size:12px;font-family:var(--sans);font-weight:700;border-radius:4px;cursor:pointer;border:1px solid;transition:all .12s;letter-spacing:.04em}
+.btn-ghost{background:transparent;color:var(--ink2);border-color:var(--border)}
+.btn-ghost:hover{background:var(--surface);color:var(--ink)}
+.btn-primary{background:var(--teal);color:white;border-color:var(--teal)}
+.btn-primary:hover{background:#155e52}
+.btn-danger{background:transparent;color:var(--coral);border-color:var(--coral-light)}
+.btn-danger:hover{background:var(--coral-light)}
+
+.prompt-output{font-family:var(--mono);font-size:12px;line-height:1.8;padding:1.25rem;color:var(--ink2);white-space:pre-wrap;min-height:400px;max-height:60vh;overflow-y:auto}
+
+.placeholder{color:var(--gold);font-weight:500}
+.section-header{color:var(--teal);font-weight:500}
+.xml-tag{color:var(--coral)}
+.comment{color:var(--ink3)}
+
+.stats-row{display:flex;gap:.75rem;margin-bottom:1.25rem}
+.stat-card{flex:1;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:.75rem;text-align:center}
+.stat-val{font-size:20px;font-weight:700;color:var(--teal);font-family:var(--mono)}
+.stat-lbl{font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+
+.section-pills{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem}
+.pill{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:700;letter-spacing:.04em}
+.pill-active{background:var(--teal-light);color:var(--teal)}
+.pill-inactive{background:var(--surface);color:var(--ink3);border:1px solid var(--border)}
+
+.preview-hint{font-size:12px;color:var(--ink3);margin-bottom:1rem;padding:.6rem .75rem;background:var(--gold-light);border-left:3px solid var(--gold);border-radius:0 4px 4px 0;line-height:1.5}
+
+.copy-feedback{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--teal);color:white;padding:.6rem 1.25rem;border-radius:6px;font-size:13px;font-weight:700;opacity:0;transition:opacity .2s;pointer-events:none}
+.copy-feedback.show{opacity:1}
+</style>
+
+<div class="header">
+  <div class="header-top">
+    <span class="badge">Prompt Builder</span>
+    <h1>Market Analysis Framework</h1>
+  </div>
+  <p class="subtitle">Configure your variables, toggle sections, then copy the complete structured prompt.</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('configure')">Configure</div>
+  <div class="tab" onclick="switchTab('sections')">Sections</div>
+  <div class="tab" onclick="switchTab('preview')">Preview Prompt</div>
+</div>
+
+<div class="workspace">
+  <div class="sidebar" id="sidebar-configure">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Product / Service</div>
+      <div class="field-group">
+        <label class="field-label">Product / Service Name</label>
+        <input class="field-input" id="v-product" placeholder="e.g. FintechPay" oninput="render()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Category / Industry</label>
+        <input class="field-input" id="v-industry" placeholder="e.g. B2B SaaS / Fintech" oninput="render()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">One-line Description</label>
+        <textarea class="field-input" id="v-description" rows="2" placeholder="What does it do?" oninput="render()"></textarea>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Market Context</div>
+      <div class="field-group">
+        <label class="field-label">Geography / Region</label>
+        <input class="field-input" id="v-geo" placeholder="e.g. India, Southeast Asia" oninput="render()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Launch Stage</label>
+        <select class="field-input" id="v-stage" onchange="render()">
+          <option value="Pre-launch / Concept">Pre-launch / Concept</option>
+          <option value="MVP / Beta">MVP / Beta</option>
+          <option value="Early Traction">Early Traction</option>
+          <option value="Growth / Scaling">Growth / Scaling</option>
+          <option value="Expansion">Expansion</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Primary Target Segment</label>
+        <input class="field-input" id="v-segment" placeholder="e.g. SMB owners aged 25–45" oninput="render()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Key Competitors (comma-separated)</label>
+        <input class="field-input" id="v-competitors" placeholder="e.g. Razorpay, Stripe, PayU" oninput="render()">
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Financial Parameters</div>
+      <div class="field-group">
+        <label class="field-label">Pricing Model</label>
+        <select class="field-input" id="v-pricing" onchange="render()">
+          <option value="Subscription (SaaS)">Subscription (SaaS)</option>
+          <option value="Transactional / Pay-per-use">Transactional / Pay-per-use</option>
+          <option value="Freemium">Freemium</option>
+          <option value="Marketplace / Commission">Marketplace / Commission</option>
+          <option value="Licensing">Licensing</option>
+          <option value="One-time Purchase">One-time Purchase</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Projection Horizon</label>
+        <select class="field-input" id="v-horizon" onchange="render()">
+          <option value="1-year">1-year</option>
+          <option value="3-year" selected>3-year</option>
+          <option value="5-year">5-year</option>
+          <option value="10-year">10-year</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Investment / Funding Stage</label>
+        <input class="field-input" id="v-funding" placeholder="e.g. Bootstrapped, Pre-seed, Series A" oninput="render()">
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Analysis Depth</div>
+      <div class="field-group">
+        <label class="field-label">Output Persona</label>
+        <select class="field-input" id="v-persona" onchange="render()">
+          <option value="Senior Strategy Consultant">Senior Strategy Consultant</option>
+          <option value="Venture Capital Analyst">Venture Capital Analyst</option>
+          <option value="Product Strategy Lead">Product Strategy Lead</option>
+          <option value="Go-to-Market Strategist">Go-to-Market Strategist</option>
+          <option value="Market Research Analyst">Market Research Analyst</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Additional Context / Constraints</label>
+        <textarea class="field-input" id="v-context" rows="3" placeholder="Any specific focus areas, constraints, or notes..." oninput="render()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar" id="sidebar-sections" style="display:none">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Core Sections</div>
+      <div id="toggles-core"></div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Analysis Modules</div>
+      <div id="toggles-modules"></div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Visualisation Outputs</div>
+      <div id="toggles-viz"></div>
+    </div>
+  </div>
+
+  <div class="main-panel" id="main-configure">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-val" id="s-sections">8</div><div class="stat-lbl">Sections</div></div>
+      <div class="stat-card"><div class="stat-val" id="s-words">~1.8k</div><div class="stat-lbl">Est. Words</div></div>
+      <div class="stat-card"><div class="stat-val" id="s-vars">7</div><div class="stat-lbl">Variables Set</div></div>
+      <div class="stat-card"><div class="stat-val" id="s-charts">6</div><div class="stat-lbl">Chart Requests</div></div>
+    </div>
+
+    <div class="preview-hint">
+      Fill in the sidebar fields, toggle sections on/off, then switch to <strong>Preview Prompt</strong> to copy your ready-to-use prompt.
+    </div>
+
+    <div class="prompt-area">
+      <div class="prompt-toolbar">
+        <div class="prompt-toolbar-left">
+          <span class="tool-label">Live Preview</span>
+        </div>
+        <div style="display:flex;gap:.4rem">
+          <button class="btn btn-ghost" onclick="resetAll()">Reset</button>
+          <button class="btn btn-primary" onclick="copyPrompt()">Copy Prompt</button>
+        </div>
+      </div>
+      <div class="prompt-output" id="prompt-output"></div>
+    </div>
+  </div>
+
+  <div class="main-panel" id="main-sections" style="display:none">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-val" id="s2-sections">8</div><div class="stat-lbl">Active Sections</div></div>
+      <div class="stat-card"><div class="stat-val" id="s2-charts">6</div><div class="stat-lbl">Active Charts</div></div>
+    </div>
+    <p style="font-size:13px;color:var(--ink3);margin-bottom:1rem">Toggle sections and visualisation outputs. Disabled sections are excluded from the generated prompt.</p>
+    <div class="section-pills" id="active-pills"></div>
+    <div class="prompt-area">
+      <div class="prompt-toolbar">
+        <span class="tool-label">Section Overview</span>
+        <button class="btn btn-primary" onclick="copyPrompt()">Copy Prompt</button>
+      </div>
+      <div class="prompt-output" id="section-overview"></div>
+    </div>
+  </div>
+
+  <div class="main-panel" id="main-preview" style="display:none">
+    <div class="prompt-area" style="margin-bottom:0">
+      <div class="prompt-toolbar">
+        <span class="tool-label">Complete Prompt — Ready to Use</span>
+        <div style="display:flex;gap:.4rem">
+          <button class="btn btn-ghost" onclick="selectAll()">Select All</button>
+          <button class="btn btn-primary" onclick="copyPrompt()">Copy Prompt</button>
+        </div>
+      </div>
+      <div class="prompt-output" id="full-prompt" style="max-height:75vh"></div>
+    </div>
+  </div>
+</div>
+
+<div class="copy-feedback" id="copy-feedback">Copied to clipboard!</div>
+
+<script>
+const V = () => ({
+  product: document.getElementById('v-product').value.trim() || '[PRODUCT_NAME]',
+  industry: document.getElementById('v-industry').value.trim() || '[INDUSTRY]',
+  description: document.getElementById('v-description').value.trim() || '[ONE_LINE_DESCRIPTION]',
+  geo: document.getElementById('v-geo').value.trim() || '[TARGET_GEOGRAPHY]',
+  stage: document.getElementById('v-stage').value,
+  segment: document.getElementById('v-segment').value.trim() || '[PRIMARY_TARGET_SEGMENT]',
+  competitors: document.getElementById('v-competitors').value.trim() || '[COMPETITOR_1], [COMPETITOR_2], [COMPETITOR_3]',
+  pricing: document.getElementById('v-pricing').value,
+  horizon: document.getElementById('v-horizon').value,
+  funding: document.getElementById('v-funding').value.trim() || '[FUNDING_STAGE]',
+  persona: document.getElementById('v-persona').value,
+  context: document.getElementById('v-context').value.trim() || '[ADDITIONAL_CONTEXT_OR_CONSTRAINTS]',
+});
+
+const TOGGLES = {
+  core: [
+    {id:'exec_summary', label:'Executive Summary'},
+    {id:'strategy', label:'Strategic Overview'},
+    {id:'market_analysis', label:'Market Analysis (TAM/SAM/SOM)'},
+    {id:'competitive', label:'Competitive Analysis'},
+    {id:'target_audience', label:'Target Audience & Personas'},
+    {id:'marketing', label:'Marketing & GTM Strategy'},
+    {id:'operations', label:'Operations & Tech Stack'},
+    {id:'financials', label:'Financial Projections'},
+  ],
+  modules: [
+    {id:'swot', label:'SWOT Analysis'},
+    {id:'porter', label:"Porter's Five Forces"},
+    {id:'pestle', label:'PESTLE Analysis'},
+    {id:'jobs_to_be_done', label:'Jobs-to-be-Done Framework'},
+    {id:'growth_loops', label:'Growth Loops & Retention'},
+    {id:'unit_economics', label:'Unit Economics (CAC, LTV, Payback)'},
+    {id:'risk', label:'Risk Register & Mitigation'},
+    {id:'regulatory', label:'Regulatory & Compliance Landscape'},
+    {id:'partnerships', label:'Partnership & Ecosystem Mapping'},
+    {id:'product_roadmap', label:'Product Roadmap Alignment'},
+  ],
+  viz: [
+    {id:'tam_chart', label:'TAM / SAM / SOM Bubble/Funnel Chart'},
+    {id:'market_share', label:'Competitor Market Share Chart'},
+    {id:'persona_chart', label:'Target Audience Demographics Chart'},
+    {id:'revenue_chart', label:'Revenue Projection Chart (multi-year)'},
+    {id:'unit_econ_chart', label:'Unit Economics Waterfall / Bar Chart'},
+    {id:'growth_chart', label:'Growth & Retention Funnel Chart'},
+    {id:'swot_matrix', label:'SWOT 2×2 Matrix'},
+    {id:'gtm_timeline', label:'GTM Launch Timeline / Gantt'},
+  ]
+};
+
+const STATE = {};
+[...TOGGLES.core, ...TOGGLES.modules, ...TOGGLES.viz].forEach(t => STATE[t.id] = true);
+
+function buildToggles(group, containerId) {
+  const c = document.getElementById(containerId);
+  c.innerHTML = '';
+  TOGGLES[group].forEach(t => {
+    const row = document.createElement('div');
+    row.className = 'toggle-row';
+    row.onclick = () => { STATE[t.id] = !STATE[t.id]; buildToggles(group, containerId); render(); };
+    const name = document.createElement('span');
+    name.className = 'toggle-name';
+    name.textContent = t.label;
+    const tog = document.createElement('div');
+    tog.className = 'toggle' + (STATE[t.id] ? ' on' : '');
+    row.appendChild(name);
+    row.appendChild(tog);
+    c.appendChild(row);
+  });
+}
+
+function generatePrompt(v) {
+  const on = (id) => STATE[id];
+  const active_core = TOGGLES.core.filter(t => on(t.id));
+  const active_modules = TOGGLES.modules.filter(t => on(t.id));
+  const active_viz = TOGGLES.viz.filter(t => on(t.id));
+
+  let p = '';
+
+  p += `<system_role>\nYou are a ${v.persona} with deep expertise in market sizing, competitive intelligence, go-to-market strategy, and financial modelling. You produce rigorous, data-grounded, investor-ready analysis. Apply first-principles thinking, avoid surface-level observations, and cite your reasoning at every step.\n</system_role>\n\n`;
+
+  p += `<task>\nConduct a comprehensive market analysis for the product/service described below. Structure your output strictly following the sections specified in <output_structure>. Use the placeholders provided in <variables> as inputs. Where data is unavailable, state your assumptions explicitly and flag them as [ASSUMPTION].\n</task>\n\n`;
+
+  p += `<variables>\n  PRODUCT_NAME      : ${v.product}\n  INDUSTRY          : ${v.industry}\n  DESCRIPTION       : ${v.description}\n  TARGET_GEOGRAPHY  : ${v.geo}\n  LAUNCH_STAGE      : ${v.stage}\n  TARGET_SEGMENT    : ${v.segment}\n  COMPETITORS       : ${v.competitors}\n  PRICING_MODEL     : ${v.pricing}\n  PROJECTION_HORIZON: ${v.horizon}\n  FUNDING_STAGE     : ${v.funding}\n  CONTEXT           : ${v.context}\n</variables>\n\n`;
+
+  p += `<output_structure>\n`;
+
+  if (on('exec_summary')) {
+    p += `\n  ## 1. EXECUTIVE SUMMARY\n  Provide a 200–250 word boardroom-ready summary covering:\n  - Problem being solved and solution overview\n  - Market opportunity (headline TAM/SAM/SOM figures)\n  - Key differentiators vs. ${v.competitors}\n  - Primary revenue model: ${v.pricing}\n  - ${v.horizon} financial outlook\n  - Top 3 strategic recommendations\n  - Single most important risk to monitor\n`;
+  }
+
+  if (on('strategy')) {
+    p += `\n  ## 2. STRATEGIC OVERVIEW\n  - Vision and mission statement (draft one if not provided)\n  - Strategic objectives for Year 1, Year 2, Year 3\n  - Core value proposition: why will ${v.segment} choose ${v.product}?\n  - Unique insight / unfair advantage\n  - Key success metrics and OKRs for each phase\n  - Strategic risks and mitigation levers\n`;
+  }
+
+  if (on('market_analysis')) {
+    p += `\n  ## 3. MARKET ANALYSIS\n\n  ### 3a. Market Sizing — TAM / SAM / SOM\n  - Define TAM (Total Addressable Market) for ${v.industry} in ${v.geo}. Provide $ figure and methodology (top-down and bottom-up).\n  - Define SAM (Serviceable Addressable Market) — narrow to ${v.segment} and ${v.geo}.\n  - Define SOM (Serviceable Obtainable Market) — realistic 3-year capture at ${v.stage} stage.\n  - State all assumptions with [ASSUMPTION] tags.\n`;
+    if (on('tam_chart')) p += `  - OUTPUT: Generate a concentric-circle or nested-funnel ASCII/text chart showing TAM → SAM → SOM with $ labels and % ratios.\n`;
+
+    p += `\n  ### 3b. Market Trends & Dynamics\n  - Top 5 macro trends driving growth in ${v.industry}\n  - Regulatory tailwinds or headwinds in ${v.geo}\n  - Technological shifts enabling or disrupting the market\n  - Market maturity curve position (emerging / growth / mature / declining)\n`;
+
+    if (on('pestle')) {
+      p += `\n  ### 3c. PESTLE Analysis\n  Analyse the following dimensions for ${v.product} in ${v.geo}:\n  - Political: Relevant policies, government priorities\n  - Economic: GDP, inflation, consumer spending, currency risk\n  - Social: Demographics, cultural factors, behavioural shifts\n  - Technological: Enablers, disruption vectors, tech adoption rate\n  - Legal: IP, data privacy, sector-specific regulations\n  - Environmental: Sustainability mandates, ESG pressure\n`;
+    }
+  }
+
+  if (on('competitive')) {
+    p += `\n  ## 4. COMPETITIVE ANALYSIS\n\n  ### 4a. Competitor Landscape\n  For each competitor in [${v.competitors}], analyse:\n  - Business model and pricing\n  - Strengths and weaknesses\n  - Market positioning and ICP\n  - Key product features\n  - Funding and growth trajectory\n  - Estimated market share\n`;
+    if (on('market_share')) p += `  - OUTPUT: Produce a market share distribution table and a positioning map (x: price, y: feature richness).\n`;
+    p += `\n  ### 4b. ${v.product} Differentiation\n  - Feature comparison matrix: ${v.product} vs top 3 competitors\n  - Blue ocean opportunities (uncontested value dimensions)\n  - Switching cost analysis\n  - Defensibility and moat assessment\n`;
+    if (on('porter')) {
+      p += `\n  ### 4c. Porter's Five Forces\n  Rate each force (Low/Medium/High) and explain its implication for ${v.product}:\n  - Threat of new entrants\n  - Bargaining power of buyers\n  - Bargaining power of suppliers\n  - Threat of substitutes\n  - Industry rivalry\n  - Overall competitive intensity verdict\n`;
+    }
+    if (on('swot')) {
+      p += `\n  ### 4d. SWOT Analysis\n  Provide 4–5 items per quadrant, prioritised by impact.\n`;
+      if (on('swot_matrix')) p += `  - OUTPUT: Render a 2×2 SWOT matrix in plain text / markdown table format.\n`;
+    }
+  }
+
+  if (on('target_audience')) {
+    p += `\n  ## 5. TARGET AUDIENCE & PERSONAS\n\n  ### 5a. Ideal Customer Profile (ICP)\n  - Firmographic / demographic profile of ${v.segment}\n  - Psychographics: motivations, goals, pain points, decision triggers\n  - Behavioural patterns: channels used, content consumed, purchase behaviour\n  - Willingness-to-pay range for ${v.pricing} model\n`;
+    if (on('persona_chart')) p += `  - OUTPUT: Generate a demographic breakdown table (age bands, income segments, geography split) and a psychographic quadrant map.\n`;
+    p += `\n  ### 5b. 3 Detailed Buyer Personas\n  For each persona provide: Name, Role, Age, Pain Points (top 3), Desired Outcomes (top 3), Objections, Preferred Channels, Trigger Events.\n`;
+    if (on('jobs_to_be_done')) {
+      p += `\n  ### 5c. Jobs-to-be-Done (JTBD)\n  - Identify the primary functional, emotional, and social jobs ${v.segment} is hiring ${v.product} to do.\n  - Map current alternatives and their unmet gaps.\n  - Articulate the "switch" trigger for adopting ${v.product}.\n`;
+    }
+    p += `\n  ### 5d. Customer Journey Map\n  Trace the full journey: Awareness → Consideration → Decision → Onboarding → Retention → Advocacy. Identify friction points and ${v.product}'s intervention at each stage.\n`;
+  }
+
+  if (on('marketing')) {
+    p += `\n  ## 6. MARKETING & GO-TO-MARKET STRATEGY\n\n  ### 6a. Positioning & Messaging\n  - Core positioning statement (Category / For whom / Unlike / Our product / Because)\n  - Tagline options (3 alternatives)\n  - Key messages per persona from Section 5b\n\n  ### 6b. Channel Strategy\n  Recommend the top 5 acquisition channels with:\n  - Rationale for ${v.segment} in ${v.geo}\n  - Estimated CAC per channel\n  - Content/Creative approach\n  - KPIs and success metrics\n\n  ### 6c. Launch Playbook (${v.stage} stage)\n  - Pre-launch: community building, waitlist, beta partners\n  - Launch week: announcement sequence, PR beats, influencer / KOL activation\n  - Post-launch: feedback loops, iteration, retention activation\n`;
+    if (on('gtm_timeline')) p += `  - OUTPUT: Produce a 12-month GTM timeline in a markdown table (Month | Milestone | Owner | KPI).\n`;
+    if (on('growth_loops')) {
+      p += `\n  ### 6d. Growth Loops & Retention\n  - Identify the primary growth loop (viral / paid / content / product-led)\n  - Retention mechanics: onboarding, habit formation, re-engagement\n  - North Star Metric and supporting input metrics\n`;
+      if (on('growth_chart')) p += `  - OUTPUT: Map the growth flywheel and render a funnel (Acquisition → Activation → Retention → Revenue → Referral) with target conversion rates at each stage.\n`;
+    }
+  }
+
+  if (on('operations')) {
+    p += `\n  ## 7. OPERATIONS & TECHNOLOGY\n\n  ### 7a. Operational Model\n  - Core business processes required to deliver ${v.product}\n  - Build vs. buy vs. partner decisions for key capabilities\n  - Team structure recommendation for ${v.stage} stage\n  - Hiring plan (roles, sequence, rationale)\n\n  ### 7b. Technology Stack\n  - Recommended stack for ${v.pricing} pricing model\n  - Integrations required for target segment\n  - Data infrastructure and analytics requirements\n  - Security, compliance, and scalability considerations\n`;
+    if (on('regulatory')) {
+      p += `\n  ### 7c. Regulatory & Compliance\n  - Key regulations applicable to ${v.industry} in ${v.geo}\n  - Compliance roadmap and estimated cost/time\n  - Licensing or certification requirements\n  - Data localisation and privacy obligations\n`;
+    }
+    if (on('partnerships')) {
+      p += `\n  ### 7d. Partnership & Ecosystem Map\n  - Strategic partnership categories (distribution, technology, content, co-selling)\n  - Top 5 priority partners with rationale\n  - Partnership model (reseller, integration, white-label, co-marketing)\n  - Dependency risks and mitigation\n`;
+    }
+    if (on('product_roadmap')) {
+      p += `\n  ### 7e. Product Roadmap Alignment\n  - Now / Next / Later roadmap themes tied to market insights\n  - Feature prioritisation matrix (Impact vs. Effort)\n  - Platform bets and long-term product vision\n`;
+    }
+  }
+
+  if (on('financials')) {
+    p += `\n  ## 8. FINANCIAL PROJECTIONS (${v.horizon})\n\n  ### 8a. Revenue Model\n  - Pricing structure breakdown for ${v.pricing}\n  - Revenue streams and mix\n  - Key revenue drivers and assumptions\n`;
+    if (on('revenue_chart')) p += `  - OUTPUT: Render a ${v.horizon} revenue projection table (Year | ARR/Revenue | MoM Growth % | Key Drivers). Include best-case / base-case / bear-case scenarios.\n`;
+    if (on('unit_economics')) {
+      p += `\n  ### 8b. Unit Economics\n  - Customer Acquisition Cost (CAC): blended and by channel\n  - Customer Lifetime Value (LTV): calculation and assumptions\n  - LTV:CAC ratio target and timeline to reach it\n  - Payback period\n  - Gross margin and contribution margin\n`;
+      if (on('unit_econ_chart')) p += `  - OUTPUT: Produce a unit economics summary table and a cohort-based LTV curve (month 1–24).\n`;
+    }
+    p += `\n  ### 8c. P&L Forecast\n  - Monthly P&L for Year 1; Annual for Year 2 and beyond\n  - COGS, Gross Profit, EBITDA\n  - Operating expenses breakdown (team, marketing, infrastructure)\n  - Headcount plan and cost\n  - Break-even analysis\n\n  ### 8d. Funding & Capital Allocation\n  - Current stage: ${v.funding}\n  - Funding requirements to reach next milestone\n  - Use of funds breakdown (%)\n  - Key milestones that unlock next round\n  - Investor return scenario (if applicable)\n`;
+  }
+
+  if (on('risk')) {
+    p += `\n  ## 9. RISK REGISTER\n  List top 10 risks across: Market, Competitive, Execution, Regulatory, Financial, Technology.\n  For each risk: Description | Likelihood (H/M/L) | Impact (H/M/L) | Mitigation Strategy | Owner.\n  Present as a structured markdown table.\n`;
+  }
+
+  p += `</output_structure>\n\n`;
+
+  p += `<formatting_instructions>\n- Use clear markdown headings (##, ###) matching the section numbers above.\n- Present all quantitative data in structured markdown tables.\n- For each chart/visual request, produce the best approximation possible in plain text, ASCII art, or markdown table format, clearly labelled.\n- Use [ASSUMPTION] tags for any figures not grounded in stated data.\n- End each major section with a "Key Insight" callout — 1 sentence that a time-pressed executive should remember.\n- Use concise, direct language. Avoid filler phrases.\n- The total output should be comprehensive — do not truncate sections.\n</formatting_instructions>`;
+
+  return p;
+}
+
+function render() {
+  const v = V();
+  const prompt = generatePrompt(v);
+  const activeSections = TOGGLES.core.filter(t => STATE[t.id]).length + TOGGLES.modules.filter(t => STATE[t.id]).length;
+  const activeViz = TOGGLES.viz.filter(t => STATE[t.id]).length;
+
+  document.getElementById('s-sections').textContent = activeSections;
+  document.getElementById('s-charts').textContent = activeViz;
+  document.getElementById('s2-sections').textContent = activeSections;
+  document.getElementById('s2-charts').textContent = activeViz;
+
+  const fields = [v.product, v.industry, v.description, v.geo, v.segment, v.competitors, v.funding, v.context];
+  const set = fields.filter(f => !f.startsWith('[')).length;
+  document.getElementById('s-vars').textContent = set + '/' + fields.length;
+  document.getElementById('s-words').textContent = '~' + Math.round(prompt.split(' ').length / 100) * 100 + 'w';
+
+  const highlight = (text) => {
+    return text
+      .replace(/\[([A-Z_0-9/ ,-]+)\]/g, '<span class="placeholder">[$1]</span>')
+      .replace(/(##+ .+)/g, '<span class="section-header">$1</span>')
+      .replace(/(<\/?[\w_]+>)/g, '<span class="xml-tag">$1</span>');
+  };
+
+  document.getElementById('prompt-output').innerHTML = highlight(prompt);
+  document.getElementById('full-prompt').innerHTML = highlight(prompt);
+
+  const pills = document.getElementById('active-pills');
+  pills.innerHTML = [...TOGGLES.core, ...TOGGLES.modules, ...TOGGLES.viz]
+    .map(t => `<span class="pill ${STATE[t.id] ? 'pill-active' : 'pill-inactive'}">${t.label}</span>`)
+    .join('');
+
+  const overview = [...TOGGLES.core, ...TOGGLES.modules, ...TOGGLES.viz]
+    .filter(t => STATE[t.id])
+    .map(t => `✓ ${t.label}`)
+    .join('\n');
+  document.getElementById('section-overview').textContent = overview || '(No sections selected)';
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((el,i) => el.classList.remove('active'));
+  const tabs = ['configure','sections','preview'];
+  tabs.forEach((t, i) => {
+    const active = t === tab;
+    document.querySelectorAll('.tab')[i].classList.toggle('active', active);
+    const sid = document.getElementById('sidebar-' + t);
+    const mid = document.getElementById('main-' + t);
+    if (sid) sid.style.display = active ? '' : 'none';
+    if (mid) mid.style.display = active ? '' : 'none';
+  });
+}
+
+function copyPrompt() {
+  const v = V();
+  const text = generatePrompt(v).replace(/<[^>]+>/g, '').replace(/&lt;/g,'<').replace(/&gt;/g,'>');
+  navigator.clipboard.writeText(text).then(() => {
+    const f = document.getElementById('copy-feedback');
+    f.classList.add('show');
+    setTimeout(() => f.classList.remove('show'), 2000);
+  });
+}
+
+function selectAll() {
+  const el = document.getElementById('full-prompt');
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  window.getSelection().removeAllRanges();
+  window.getSelection().addRange(range);
+}
+
+function resetAll() {
+  ['v-product','v-industry','v-description','v-geo','v-segment','v-competitors','v-funding','v-context'].forEach(id => document.getElementById(id).value = '');
+  render();
+}
+
+buildToggles('core', 'toggles-core');
+buildToggles('modules', 'toggles-modules');
+buildToggles('viz', 'toggles-viz');
+render();
+</script>
