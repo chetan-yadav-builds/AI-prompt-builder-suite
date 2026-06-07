@@ -24,7 +24,7 @@ Selected outputs generated through these prompts and experiments are documented 
 
 ### Live Prompt Builder Suite
 
-https://chetan-yadav-builds.github.io/ai-prompt-builder-suite/
+https://chetan-yadav-builds.github.io/AI-prompt-builder-suite/
 
 ### Google Sheets
 
