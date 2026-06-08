@@ -1,37 +1,31 @@
-# AI Prompt Builder Suite
+AI Prompt Builder Suite
 
-AI Prompt Builder Suite is a collection of interactive prompt-building tools, prompt libraries, AI experiments, and output showcases designed to help professionals leverage Large Language Models more effectively.
+AI Prompt Builder Suite is a collection of AI-powered builders, workflows, and artifacts that demonstrate how AI tools can be used to solve real-world business, research, product, and strategy challenges.
 
-## Interactive Tools
+Interactive Tools
 
 - Market Analysis Prompt Builder
-- Business Development Call Script Builder (Coming Soon)
-- Additional AI-powered prompt builders (Coming Soon)
+  - Live Tool
+  - Uber for School Kids Artifact Collection
+  - Business Development Call Script Builder (Coming Soon)
+  - Additional AI-powered builders (Coming Soon)
 
-## Prompt Library
+Featured Artifacts
 
-A curated collection of prompts, frameworks, templates, and workflows used across business development, recruitment, product strategy, market research, and AI projects.
+Market Research
+- Uber for School Kids
+  - Market Analysis
+  - Audio Storybook
+  - User Flow 
 
-## AI Experiments
+Future Areas
 
-This repository also serves as a public log of AI experiments, including prompts, outputs, observations, learnings, and comparative results across different models and approaches.
+- Business Development
+- Product Management
+- Architecture Design
+- Recruitment
+- Productivity & Workflow Automation
 
-## Output Repository
+Objective
 
-Selected outputs generated through these prompts and experiments are documented and shared for public review and learning.
-
-## Resources
-
-### Live Prompt Builder Suite
-
-https://chetan-yadav-builds.github.io/AI-prompt-builder-suite/
-
-### Google Sheets
-
-Prompt Library - Coming Soon
-
-AI Experiments & Outputs - Coming Soon
-
-## Objective
-
-The goal of this project is to create a practical, publicly accessible resource that demonstrates how AI can be applied to solve real-world business, research, strategy, and productivity challenges through structured prompt engineering.
+The goal of this project is to demonstrate practical applications of AI across business problem solving, research, strategy, product thinking, and workflow design through interactive tools and publicly accessible artifacts.
