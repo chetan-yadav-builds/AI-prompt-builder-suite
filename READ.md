@@ -5,26 +5,22 @@ AI Prompt Builder Suite is a collection of AI-powered builders, workflows, and a
 Interactive Tools
 
 - Market Analysis Prompt Builder
-  - Live Tool
+  - Live Tool - https://chetan-yadav-builds.github.io/AI-prompt-builder-suite/
   - Uber for School Kids Artifact Collection
+  - Artifacts - https://docs.google.com/document/d/1QoSpyQk00qqcfkNCBa6pOZk0uD1bla_Y9O0th0ROJeE/edit?usp=sharing
   - Business Development Call Script Builder (Coming Soon)
   - Additional AI-powered builders (Coming Soon)
 
-Featured Artifacts
+ AI Fluency Showcase
 
-Market Research
+Examples demonstrating the application of AI tools across business problem solving, strategy, product thinking, workflow design, and communication.
+
+Featured Examples
+
 - Uber for School Kids
   - Market Analysis
-  - Audio Storybook
-  - User Flow 
-
-Future Areas
-
-- Business Development
-- Product Management
-- Architecture Design
-- Recruitment
-- Productivity & Workflow Automation
+  - Gemini Storybook
+  - DiagramGPT User Flow (Coming Soon)
 
 Objective
 
