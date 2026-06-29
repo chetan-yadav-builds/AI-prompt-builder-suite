@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BD Pre-Call Intelligence Generator — Antal International</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8fafc;min-height:100vh;color:#111827}
+
+/* ── HEADER ── */
+.header{background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 100%);padding:24px}
+.header-inner{max-width:700px;margin:0 auto}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.18em;color:#f59e0b;text-transform:uppercase;margin-bottom:8px}
+.header h1{font-size:24px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:8px}
+.header p{font-size:14px;color:#94a3b8;max-width:500px;line-height:1.6}
+
+/* ── FORM LAYOUT ── */
+.form-wrap{max-width:700px;margin:0 auto;padding:28px 16px 60px}
+
+/* ── SECTION CARDS ── */
+.card{background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;margin-bottom:20px}
+.card-head{padding:14px 20px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:10px}
+.card-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff}
+.card-title{font-size:15px;font-weight:700;color:#111827}
+.card-body{padding:20px}
+
+/* ── FORM FIELDS ── */
+.field{margin-bottom:16px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:6px;letter-spacing:.02em}
+.req{color:#f59e0b}
+input,textarea,select{width:100%;padding:10px 14px;border:1px solid #e5e7eb;border-radius:8px;font-size:14px;color:#111827;background:#fff;font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s}
+input:focus,textarea:focus,select:focus{border-color:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.12)}
+textarea{resize:vertical;min-height:80px;line-height:1.5}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;cursor:pointer}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:480px){.grid2{grid-template-columns:1fr}}
+
+/* ── CALL TYPE PILLS ── */
+.pill-row{display:flex;flex-wrap:wrap;gap:8px}
+.pill{padding:7px 14px;border-radius:20px;border:1px solid #e5e7eb;background:#fff;color:#4b5563;font-size:13px;font-weight:400;cursor:pointer;font-family:inherit;transition:all .15s}
+.pill:hover{border-color:#d1d5db;background:#f9fafb}
+.pill.on{border:2px solid #f59e0b;background:#fffbeb;color:#92400e;font-weight:700}
+
+/* ── FOCUS TOGGLES ── */
+.focus-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:10px;border:1px solid #e5e7eb;background:#fafafa;cursor:pointer;transition:all .15s;margin-bottom:10px;user-select:none}
+.focus-item:last-child{margin-bottom:0}
+.focus-item:hover{border-color:#d1d5db}
+.focus-item.on{border:1.5px solid #f59e0b;background:#fffbeb}
+.chkbox{width:20px;height:20px;border-radius:5px;border:1.5px solid #d1d5db;background:transparent;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.focus-item.on .chkbox{background:#f59e0b;border-color:#f59e0b}
+.focus-lbl{font-size:14px;font-weight:600;color:#374151}
+.focus-item.on .focus-lbl{color:#92400e}
+.focus-desc{font-size:12px;color:#9ca3af;margin-top:2px}
+.focus-item.on .focus-desc{color:#78350f}
+
+/* ── NOTICE BOX ── */
+.notice{margin-bottom:12px;padding:10px 12px;background:#fffbeb;border-radius:8px;border:1px solid #fde68a;display:flex;gap:8px;align-items:flex-start;font-size:12px;color:#78350f;line-height:1.5}
+
+/* ── VALIDATION MSG ── */
+#val-msg{padding:12px 16px;background:#fef3c7;border:1px solid #fde68a;border-radius:8px;margin-bottom:16px;display:none;gap:8px;align-items:center;font-size:13px;color:#78350f}
+#val-msg.show{display:flex}
+
+/* ── GENERATE BUTTON ── */
+#gen-btn{width:100%;padding:16px 24px;border-radius:12px;border:none;background:#e5e7eb;color:#9ca3af;font-size:16px;font-weight:800;cursor:not-allowed;display:flex;align-items:center;justify-content:center;gap:10px;font-family:inherit;transition:all .2s;letter-spacing:.01em}
+#gen-btn.ready{background:#f59e0b;color:#000;cursor:pointer}
+#gen-btn.ready:hover{background:#d97706}
+.word-hint{text-align:center;font-size:12px;color:#9ca3af;margin-top:12px}
+
+/* ── OUTPUT VIEW ── */
+#out-view{min-height:100vh;background:#0f172a;display:none}
+.out-head{background:#1e293b;border-bottom:1px solid #334155;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.out-head-left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.back-btn{display:flex;align-items:center;gap:6px;background:transparent;border:1px solid #475569;border-radius:8px;color:#94a3b8;padding:7px 14px;font-size:13px;cursor:pointer;font-family:inherit;transition:all .15s}
+.back-btn:hover{background:#334155;color:#e2e8f0}
+.out-eyebrow{font-size:11px;font-weight:700;letter-spacing:.15em;color:#f59e0b;text-transform:uppercase;margin-bottom:2px}
+.out-title{font-size:15px;font-weight:700;color:#f1f5f9}
+.copy-btn{display:flex;align-items:center;gap:8px;background:#f59e0b;color:#000;border:none;border-radius:8px;padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s}
+.copy-btn.done{background:#059669;color:#fff}
+.stats-bar{background:#1e293b;border-bottom:1px solid #0f172a;padding:10px 24px;display:flex;gap:24px;flex-wrap:wrap}
+.stat{display:flex;align-items:baseline;gap:8px}
+.stat-val{font-size:18px;font-weight:700;color:#f59e0b}
+.stat-lbl{font-size:12px;color:#64748b}
+.out-body{padding:24px;max-width:860px;margin:0 auto}
+.prompt-box{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:28px 32px;font-family:'SF Mono','Fira Code','Cascadia Code','Courier New',monospace;font-size:13px;line-height:1.8;white-space:pre-wrap;word-break:break-word;color:#cbd5e1}
+.prompt-box .d{color:#334155;display:block}
+.prompt-box .x{color:#7dd3fc;display:block}
+.prompt-box .s{color:#fbbf24;display:block}
+.prompt-box .m{color:#94a3b8;display:block}
+.prompt-box .b{color:#e2e8f0;display:block}
+.prompt-box .ok{color:#34d399;display:block}
+.prompt-box .wn{color:#fbbf24;display:block}
+.prompt-box .er{color:#f87171;display:block}
+.prompt-box .br{color:#a78bfa;display:block}
+.prompt-box .n{display:block}
+.copy-foot{text-align:center;margin-top:24px;padding-bottom:32px}
+.copy-lg{display:inline-flex;align-items:center;gap:8px;background:#f59e0b;color:#000;border:none;border-radius:10px;padding:14px 32px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s}
+.copy-lg.done{background:#059669;color:#fff}
+.copy-hint{color:#475569;font-size:12px;margin-top:10px}
+
+/* ── SVG ICONS ── */
+svg{display:inline-block;vertical-align:middle;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════
+     FORM VIEW
+═══════════════════════════════════════════════════ -->
+<div id="form-view">
+  <div class="header">
+    <div class="header-inner">
+      <div class="eyebrow">Antal International · India Practice</div>
+      <h1>BD Pre-Call Intelligence Generator</h1>
+      <p>Fill in the details for your upcoming BD call. The generator builds a structured research brief following Anthropic's prompting best practices — ready to paste into Claude.</p>
+    </div>
+  </div>
+
+  <div class="form-wrap">
+
+    <!-- 1 · Contact Details -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#3b82f6">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <span class="card-title">1 · Contact Details</span>
+      </div>
+      <div class="card-body">
+        <div class="grid2">
+          <div class="field">
+            <label for="f-name">Contact Name <span class="req">*</span></label>
+            <input id="f-name" type="text" placeholder="e.g. Samrat Sarkar" oninput="checkReady()">
+          </div>
+          <div class="field">
+            <label for="f-title">Designation / Title <span class="req">*</span></label>
+            <input id="f-title" type="text" placeholder="e.g. Director – Human Resources" oninput="checkReady()">
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label for="f-li">LinkedIn Profile URL <span class="req">*</span></label>
+          <input id="f-li" type="url" placeholder="https://www.linkedin.com/in/..." oninput="checkReady()">
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 · Company Profile -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#8b5cf6">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg>
+        </div>
+        <span class="card-title">2 · Company Profile</span>
+      </div>
+      <div class="card-body">
+        <div class="field">
+          <label for="f-co">Company Name <span class="req">*</span></label>
+          <input id="f-co" type="text" placeholder="e.g. Boston Scientific" oninput="checkReady()">
+        </div>
+        <div class="grid2">
+          <div class="field" style="margin-bottom:0">
+            <label for="f-ind">Industry / Sector</label>
+            <select id="f-ind">
+              <option>Select Industry</option>
+              <option>Technology / Software / SaaS / IT Services</option>
+              <option>Banking, Financial Services &amp; Insurance (BFSI)</option>
+              <option>Healthcare, Life Sciences &amp; Pharma</option>
+              <option>Manufacturing &amp; Industrial</option>
+              <option>Consumer Goods, FMCG &amp; Retail</option>
+              <option>Energy, Oil &amp; Gas &amp; Utilities</option>
+              <option>Media, Advertising &amp; Entertainment</option>
+              <option>Professional &amp; Consulting Services</option>
+              <option>Logistics, Supply Chain &amp; E-commerce</option>
+              <option>Automotive &amp; Mobility</option>
+              <option>Telecommunications &amp; Networking</option>
+              <option>Real Estate &amp; Infrastructure</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label for="f-sz">Company Size</label>
+            <select id="f-sz">
+              <option>Select Company Size</option>
+              <option>Growth Stage / Startup (&lt; 500 employees)</option>
+              <option>Mid-Market (500 – 5,000 employees)</option>
+              <option>Large Enterprise (5,000 – 50,000 employees)</option>
+              <option>Global MNC (50,000+ employees)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 · Call Context -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#10b981">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <span class="card-title">3 · Call Context</span>
+      </div>
+      <div class="card-body">
+        <div class="field">
+          <label>Call Type</label>
+          <div class="pill-row" id="pill-row"></div>
+        </div>
+        <div class="field">
+          <label for="f-hook">Call Hook / Trigger <span style="font-weight:400;color:#9ca3af">(Optional)</span></label>
+          <textarea id="f-hook" placeholder="What prompted this call? e.g. Saw they posted 12 India-based roles this month · Noticed their CHRO joined from Accenture India · Company announced ₹500Cr India expansion..."></textarea>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label for="f-prior">Prior Interaction Notes <span style="font-weight:400;color:#9ca3af">(Optional)</span></label>
+          <textarea id="f-prior" style="min-height:64px" placeholder="Any prior context — e.g. Met at SHRM conference 2024, spoke briefly. They mentioned exploring GCC options in 2025."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 · Research Priority Modules -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#f59e0b">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </div>
+        <span class="card-title">4 · Research Priority Modules</span>
+      </div>
+      <div class="card-body">
+        <div class="notice">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          GCC &amp; India Footprint Analysis is always included as a core research task. Toggle additional modules below based on call priority.
+        </div>
+        <div id="focus-wrap"></div>
+      </div>
+    </div>
+
+    <!-- Validation message -->
+    <div id="val-msg">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Please fill in Contact Name, Designation, Company Name, and LinkedIn URL to generate your brief.
+    </div>
+
+    <!-- Generate button -->
+    <button id="gen-btn" onclick="handleGenerate()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Generate Pre-Call Intelligence Prompt
+    </button>
+    <p class="word-hint" id="word-hint">Generates a ~680 word, XML-structured prompt · Paste into Claude and run live research</p>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     OUTPUT VIEW
+═══════════════════════════════════════════════════ -->
+<div id="out-view">
+  <div class="out-head">
+    <div class="out-head-left">
+      <button class="back-btn" onclick="goBack()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Edit Details
+      </button>
+      <div>
+        <div class="out-eyebrow">Antal International · India Practice</div>
+        <div class="out-title" id="out-title">Pre-Call Intelligence Brief</div>
+      </div>
+    </div>
+    <button class="copy-btn" id="copy-top" onclick="doCopy('copy-top','Copy Prompt')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy Prompt
+    </button>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat"><span class="stat-val" id="s-words">—</span><span class="stat-lbl">Words</span></div>
+    <div class="stat"><span class="stat-val">6</span><span class="stat-lbl">Research Dimensions</span></div>
+    <div class="stat"><span class="stat-val" id="s-mods">—</span><span class="stat-lbl">Research Modules Active</span></div>
+    <div class="stat"><span class="stat-val">3 timed</span><span class="stat-lbl">Pitch Segments</span></div>
+  </div>
+
+  <div class="out-body">
+    <div class="prompt-box" id="prompt-box"></div>
+    <div class="copy-foot">
+      <button class="copy-lg" id="copy-bot" onclick="doCopy('copy-bot','Copy Full Prompt')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy Full Prompt
+      </button>
+      <p class="copy-hint">Paste this into Claude · Claude will conduct live research and generate your brief</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── CONSTANTS ────────────────────────────────────────────────
+const CALL_TYPES = [
+  {v:'cold',  l:'Cold Outreach'},
+  {v:'warm',  l:'Warm Introduction / Referral'},
+  {v:'event', l:'Post-Event / Conference Follow-up'},
+  {v:'inbound',l:'Inbound / Response to Content'},
+  {v:'followup',l:'Follow-up from Prior Conversation'}
+];
+const FOCUS = [
+  {k:'gcc',       l:'GCC & India Footprint Analysis',  d:'Priority deep-dive: India presence, GCC status, city + function breakdown', on:true},
+  {k:'competitor',l:'Competitor Intelligence',          d:'Peer GCC moves, India hiring patterns, competitive pressure signals',       on:true},
+  {k:'leadership',l:'Leadership Movement Alerts',       d:'C-suite, VP, Director changes in last 6 months \u2014 new leaders = new mandates', on:true},
+  {k:'funding',   l:'Funding & M\u0026A Signals',      d:'Fundraising, acquisitions, IPO \u2014 strongest triggers for headcount scale-up', on:false},
+  {k:'talent',    l:'Talent & Attrition Signals',      d:'Job postings, Glassdoor, LinkedIn movement, headcount trend analysis',     on:true}
+];
+
+// ─── STATE ───────────────────────────────────────────────────
+const S = {
+  callType: 'cold',
+  focus: Object.fromEntries(FOCUS.map(f=>[f.k,f.on]))
+};
+let promptText = '';
+
+// ─── INIT ────────────────────────────────────────────────────
+(function init(){
+  // Build pills
+  const pr = document.getElementById('pill-row');
+  CALL_TYPES.forEach(ct=>{
+    const b = document.createElement('button');
+    b.className = 'pill' + (ct.v===S.callType?' on':'');
+    b.textContent = ct.l;
+    b.dataset.v = ct.v;
+    b.onclick = ()=>{ S.callType=ct.v; pr.querySelectorAll('.pill').forEach(p=>p.classList.toggle('on',p.dataset.v===ct.v)); };
+    pr.appendChild(b);
+  });
+  // Build focus toggles
+  renderFocus();
+  updateHint();
+})();
+
+function renderFocus(){
+  const w = document.getElementById('focus-wrap');
+  w.innerHTML = FOCUS.map(f=>{
+    const on = S.focus[f.k];
+    const chk = on
+      ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
+      : '';
+    return `<div class="focus-item${on?' on':''}" onclick="toggleFocus('${f.k}')">
+      <div class="chkbox">${chk}</div>
+      <div>
+        <div class="focus-lbl">${esc(f.l)}</div>
+        <div class="focus-desc">${esc(f.d)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleFocus(k){
+  S.focus[k] = !S.focus[k];
+  renderFocus();
+  updateHint();
+}
+
+function checkReady(){
+  const ok = v('f-name')&&v('f-title')&&v('f-co')&&v('f-li');
+  document.getElementById('gen-btn').classList.toggle('ready',ok);
+  if(ok) document.getElementById('val-msg').classList.remove('show');
+  updateHint();
+}
+
+function updateHint(){
+  const n = FOCUS.filter(f=>S.focus[f.k]).length;
+  document.getElementById('word-hint').textContent =
+    `Generates a ~${Math.round(600+n*80)} word, XML-structured prompt \u00b7 Paste into Claude and run live research`;
+}
+
+function v(id){ return document.getElementById(id).value.trim(); }
+
+// ─── GENERATE ────────────────────────────────────────────────
+function handleGenerate(){
+  const ok = v('f-name')&&v('f-title')&&v('f-co')&&v('f-li');
+  if(!ok){ document.getElementById('val-msg').classList.add('show'); return; }
+  promptText = buildPrompt();
+  showOutput();
+}
+
+function showOutput(){
+  document.getElementById('form-view').style.display = 'none';
+  const ov = document.getElementById('out-view');
+  ov.style.display = 'block';
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  const name = v('f-name'), co = v('f-co');
+  document.getElementById('out-title').textContent =
+    `Pre-Call Intelligence Brief \u2014 ${name} @ ${co}`;
+
+  const wc = promptText.split(/\s+/).filter(Boolean).length;
+  document.getElementById('s-words').textContent = wc.toLocaleString();
+  const nm = FOCUS.filter(f=>S.focus[f.k]).length;
+  document.getElementById('s-mods').textContent = `${nm} / ${FOCUS.length}`;
+
+  renderPrompt(promptText);
+}
+
+function goBack(){
+  document.getElementById('out-view').style.display = 'none';
+  document.getElementById('form-view').style.display = 'block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ─── SYNTAX-HIGHLIGHTED PROMPT RENDER ────────────────────────
+function renderPrompt(text){
+  const box = document.getElementById('prompt-box');
+  const html = text.split('\n').map(line=>{
+    const t = line.trim();
+    let cls = 'n';
+    if(t.includes('\u2501\u2501'))                                        cls='d';
+    else if(t.includes('\u2500\u2500'))                                   cls='m';
+    else if((t.startsWith('<')&&!t.startsWith('</'))||t.startsWith('</')) cls='x';
+    else if(/^(DIMENSION|SECTION|STEP [A-D]|[0-9][A-Z]\.|▶)/.test(t))   cls='s';
+    else if(t.startsWith('\u2705'))                                       cls='ok';
+    else if(t.startsWith('\u26a0'))                                       cls='wn';
+    else if(t.startsWith('\u2753'))                                       cls='er';
+    else if(t.startsWith('[')&&t.includes(']'))                          cls='br';
+    else if(t.startsWith('\u2022')||t.startsWith('\u2014'))               cls='b';
+    return `<span class="${cls}">${esc(line)}</span>`;
+  }).join('\n');
+  box.innerHTML = html;
+}
+
+// ─── COPY ─────────────────────────────────────────────────────
+function doCopy(btnId, origLabel){
+  const btn = document.getElementById(btnId);
+  try{ navigator.clipboard.writeText(promptText); } catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = promptText;
+    ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+  }
+  const isLg = btn.classList.contains('copy-lg');
+  const sz = isLg ? 18 : 16;
+  const checkSvg = `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+  btn.classList.add('done');
+  btn.innerHTML = checkSvg + (isLg ? ' Prompt Copied to Clipboard' : ' Copied!');
+  setTimeout(()=>{
+    btn.classList.remove('done');
+    const copySvg = `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+    btn.innerHTML = copySvg + ' ' + origLabel;
+  }, 2500);
+}
+
+// ─── HTML ESCAPE HELPER ──────────────────────────────────────
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ─── PROMPT BUILDER ──────────────────────────────────────────
+function buildPrompt(){
+  const name    = v('f-name')  || '[CONTACT NAME]';
+  const title   = v('f-title') || '[CONTACT TITLE]';
+  const co      = v('f-co')    || '[COMPANY NAME]';
+  const li      = v('f-li')    || '[LINKEDIN PROFILE URL]';
+  const ind     = document.getElementById('f-ind').value;
+  const sz      = document.getElementById('f-sz').value;
+  const hook    = document.getElementById('f-hook').value.trim();
+  const prior   = document.getElementById('f-prior').value.trim();
+  const callLbl = CALL_TYPES.find(c=>c.v===S.callType)?.l || 'Cold Outreach';
+  const industry = (ind && ind!=='Select Industry')        ? ind : '[INDUSTRY]';
+  const sizeBlk  = (sz  && sz !=='Select Company Size')   ? `\n  Company Size: ${sz}` : '';
+  const hookBlk  = hook  ? `\n  Call Hook / Trigger: ${hook}` : '';
+  const priorBlk = prior ? `\n  Prior Interaction: ${prior}`  : '';
+
+  const gcc = S.focus.gcc ? `
+
+  \u25b6 GCC & INDIA FOOTPRINT ANALYSIS \u2014 PRIORITY (document every step of this process)
+
+  STEP A \u2014 Direct Confirmation
+  Search: "${co} GCC India", "${co} Global Capability Center India", "${co} India development center", "${co} India office operations"
+
+  STEP B \u2014 Signal Detection (if Step A yields no direct results)
+  Check: LinkedIn company page for India location tag \u2022 India-based job postings in last 90 days \u2022 India entity in corporate or regulatory filings \u2022 India mentions in earnings call transcripts or annual reports
+
+  STEP C \u2014 Intent Signals
+  Search: "${co} India expansion 2024 2025" \u2022 "${co} offshore strategy" \u2022 "${co} global delivery model" \u2022 "${co} India talent strategy"
+  Look for: analyst commentary on cost optimization, global talent strategy, or India-specific operations
+
+  STEP D \u2014 Deliver One Definitive Verdict:
+  \u2705 GCC CONFIRMED \u2014 cite source, city, functions, and approximate headcount
+  \u26a0\ufe0f GCC SIGNALS PRESENT \u2014 list all signals found, assign confidence: High / Medium / Low
+  \u2753 NO GCC EVIDENCE \u2014 state what was searched, note what is absent, recommend 2 probe questions for the call
+
+  Regardless of verdict: identify which functions are India-based (Tech / Finance / Ops / HR / Legal), approximate India headcount if findable, city presence (Bengaluru / Hyderabad / Pune / Chennai / NCR / Mumbai / Other).` : '';
+
+  const competitor = S.focus.competitor ? `
+
+  \u25b6 COMPETITIVE INTELLIGENCE
+  Identify ${co}\u2019s 2\u20133 closest competitors. For each:
+  \u2014 Do they operate a GCC in India? Which city? Which functions? Approximate scale?
+  \u2014 Is there visible competitive pressure on ${co} to establish or grow their India footprint?
+  \u2014 Surface any talent movement between ${co} and competitors in India via LinkedIn pattern analysis.
+  Conclude with: Is ${co} behind, on par, or ahead of industry peers in India GCC buildout?` : '';
+
+  const leadership = S.focus.leadership ? `
+
+  \u25b6 LEADERSHIP MOVEMENT ALERTS (Last 6 Months)
+  Flag any leadership changes in HR, Operations, Technology, Finance, or India-specific roles.
+  Note: who left, who joined, and what organization they came from.
+  New leaders in these functions routinely trigger vendor reviews, fresh hiring mandates, and openness to specialist partners.` : '';
+
+  const funding = S.focus.funding ? `
+
+  \u25b6 FUNDING & M&A INTELLIGENCE
+  Surface any recent or pending: funding rounds, M&A activity, IPO preparations, or major partnership announcements.
+  These are among the strongest predictors of rapid headcount scaling \u2014 particularly for India GCC contexts.` : '';
+
+  const talent = S.focus.talent ? `
+
+  \u25b6 TALENT & ATTRITION SIGNAL ANALYSIS
+  \u2014 Current job postings: volume, functions, seniority levels, locations (especially India)
+  \u2014 LinkedIn headcount trend over last 12 months: growing / flat / declining?
+  \u2014 Glassdoor signals: recurring themes in reviews regarding management, culture, or growth opportunities?
+  \u2014 LinkedIn talent flow: notable people joining or leaving? Source or destination company patterns?` : '';
+
+  const D = '\u2501'.repeat(35);
+  const d = '\u2500'.repeat(29);
+
+  return `<role>
+You are a Senior Research Manager at Antal International, one of India\u2019s foremost executive recruitment firms. You support a Business Development professional whose mandate is to open and advance relationships with senior decision-makers at organizations that have \u2014 or could strategically benefit from \u2014 a Global Capability Center (GCC) in India. Your task is to transform publicly available intelligence into a sharp, actionable pre-call briefing. The BD professional should walk into this call with credibility, relevance, and a compelling hook that earns the next conversation.
+</role>
+
+<context>
+  <call_details>
+    Call Type: ${callLbl}
+    Target Individual: ${name}, ${title}
+    Target Company: ${co}
+    Industry: ${industry}${sizeBlk}
+    LinkedIn Profile: ${li}${hookBlk}${priorBlk}
+  </call_details>
+
+  <antal_context>
+    Antal International is a global executive recruitment firm with a focused India practice. We specialize in mid-to-senior level hiring across the Indian market, with a dedicated Global Capability Center (GCC) practice that supports multinational organizations in establishing, scaling, and transforming their India-based capability hubs. We recruit across Technology, Finance, Operations, HR, Legal, Risk, and Leadership functions. Scope is Indian market only. The BD professional\u2019s primary revenue opportunity lies in companies with active or planned GCCs in India.
+  </antal_context>
+</context>
+
+<research_instructions>
+Conduct a structured intelligence sweep across all dimensions below. For EACH section:
+\u2022 Surface the 2\u20133 most strategically actionable insights first
+\u2022 Clearly distinguish: CONFIRMED (directly sourced / verifiable) vs. INFERRED (reasoned from signals / patterns)
+\u2022 Flag gaps where information is incomplete and note what additional research would strengthen the briefing
+\u2022 Keep the recruitment lens primary throughout \u2014 every insight should connect back to a hiring implication or GCC signal
+
+${D}
+DIMENSION 1: INDIVIDUAL INTELLIGENCE \u2014 ${name}
+${D}
+
+1A. CAREER TRAJECTORY
+Examine their LinkedIn profile and any professional bios. Identify:
+\u2014 Domain expertise and how their functional focus has evolved over time
+\u2014 Types of organizations they have worked at (startup / Indian company / Global MNC / GCC environment)
+\u2014 Tenure patterns: builder, stabilizer, or transformation specialist?
+\u2014 Recency of current role \u2014 new leaders in HR, Finance, or Operations often signal openness to new partners
+\u2014 Visible growth in scope or authority suggesting increased hiring decision power
+
+1B. THOUGHT LEADERSHIP & PROFESSIONAL ENGAGEMENT
+Review their LinkedIn activity \u2014 posts authored, content shared, comments made, conferences attended:
+\u2014 What themes dominate their public engagement? (talent, technology, GCC, culture, DEI, India operations)
+\u2014 Speaking appearances, panel participations, awards, or media mentions?
+\u2014 What does their public posture reveal about their current professional priorities?
+
+1C. RAPPORT & CONNECTION ANCHORS
+Surface anything that can serve as a warm, authentic opener in the first 60 seconds:
+\u2014 Mutual LinkedIn connections (especially those who can provide a warm reference)
+\u2014 Shared educational background (college, MBA program, professional certifications)
+\u2014 Common career origins or shared industry history
+\u2014 Causes, communities, or boards they visibly support
+\u2014 Recent content they have engaged with that we can reference authentically
+
+1D. DECISION-MAKING PROFILE
+Based on their title, seniority, tenure, and organizational context \u2014 assess their likely role:
+\u2192 Final Decision Authority / Key Influencer / Process Gatekeeper / Internal Champion / Recommender?
+
+What likely motivates them professionally? What does success look like in their current seat? How does recruitment performance typically factor into their KPIs?
+
+${D}
+DIMENSION 2: COMPANY INTELLIGENCE \u2014 ${co}
+${D}
+
+2A. RECENT STRATEGIC DEVELOPMENTS (Last 6\u201312 Months)
+Scan press releases, news, LinkedIn company updates, investor commentary, and earnings transcripts for:
+\u2014 Major leadership appointments or departures (C-suite, VP, Director level)
+\u2014 Product launches, platform announcements, or significant partnerships
+\u2014 Acquisitions, mergers, joint ventures, or divestments
+\u2014 Restructuring, reorgs, or workforce reduction announcements
+${leadership}${funding}
+2B. GROWTH & TALENT SIGNALS${talent}${gcc}${competitor}
+
+${D}
+DIMENSION 3: INDUSTRY INTELLIGENCE \u2014 ${industry}
+${D}
+
+3A. MACRO FORCES RESHAPING THIS SECTOR (2024\u20132025)
+What are the 2\u20133 dominant trends transforming this industry right now? How are companies responding in terms of talent strategy and India operations?
+
+3B. TALENT & HIRING LANDSCAPE IN THIS SECTOR
+\u2014 Which functions are in highest demand in this vertical?
+\u2014 Critical skills gaps or shortages this sector is currently navigating?
+\u2014 Clear trend toward India-based GCCs or offshore capability centers in this industry?
+\u2014 What hiring strategies are best-in-class companies in this space adopting?
+
+3C. REGULATORY & ECONOMIC CONTEXT
+Any policy changes, regulatory shifts, or macroeconomic headwinds/tailwinds relevant to ${co}\u2019s India operations, hiring posture, or expansion timeline? Consider: sector-specific GOI incentives, RBI regulations (if BFSI), data localization requirements, or PLI scheme eligibility.
+
+${D}
+DIMENSION 4: STRATEGIC TALKING POINTS
+${D}
+
+4A. PRIMARY PAIN POINTS TO SURFACE
+Based on all research above \u2014 what are the most likely talent, hiring, or organizational capability challenges this company faces right now? Rank by likelihood and recruitment relevance.
+
+4B. VALUE ALIGNMENT HOOKS
+Where does Antal\u2019s offering (India GCC hiring expertise, mid-to-senior search, specialized functional practices) most naturally connect with their stated or inferred priorities?
+
+4C. OBJECTION ANTICIPATION
+Most likely barriers or objections to expect:
+Consider: existing preferred-vendor arrangements, budget cycle timing, internal TA team bandwidth, RPO or MSP contracts, skepticism about specialist firms vs. larger players, or past negative experiences with external recruiters.
+
+4D. DIFFERENTIATION ANGLES
+Given ${co}\u2019s specific context \u2014 which 1\u20132 Antal strengths deserve emphasis on this call? Frame each in terms of the value it delivers TO THEM, not what Antal does.
+
+${D}
+DIMENSION 5: RISK & OPPORTUNITY MATRIX
+${D}
+
+5A. RISK FLAGS
+Surface anything that could create friction or a shortened conversation:
+Internal bottlenecks, recent layoffs or hiring freeze signals, leadership churn, public controversies, unmet customer commitments, or findable past recruitment failures.
+
+5B. EXPANSION OPPORTUNITIES
+Where is ${co} likely to grow in the next 12\u201318 months?
+Geographic, functional, product line, or technology expansion signals \u2014 especially anything pointing to India or capability center buildout.
+
+5C. KEY ASSUMPTIONS TO VALIDATE ON THE CALL
+List 4\u20135 critical assumptions we are operating on from research that must be confirmed or challenged during the conversation. These become the foundation of the discovery section.
+
+${D}
+DIMENSION 6: DISCOVERY QUESTIONS BANK
+${D}
+
+Provide 10 open-ended questions organized by category:
+
+[RAPPORT & CONTEXT] \u2014 2 questions
+Designed to open warmly and show you have done your research without being presumptuous.
+
+[BUSINESS & TALENT STRATEGY] \u2014 3 questions
+Designed to surface their current organizational priorities and how talent fits into their roadmap.
+
+[INDIA / GCC FOOTPRINT] \u2014 2 questions
+Designed to either confirm and explore their GCC status, or plant the idea if they are pre-GCC.
+
+[DECISION PROCESS & TIMING] \u2014 2 questions
+Designed to understand who else is involved, how vendor decisions are made, and where urgency exists.
+
+[OPENING THE DOOR] \u2014 1 question
+The closing question of the discovery phase \u2014 designed to earn a clear next step.
+</research_instructions>
+
+<output_format>
+Deliver your complete output in three sequential sections:
+
+${D}
+SECTION A \u2014 EXECUTIVE PRE-CALL BRIEFING
+${D}
+5 bullet points maximum. Written for someone with 90 seconds before dialing. Lead with the single most important insight. Each bullet is one clear, actionable sentence.
+
+${D}
+SECTION B \u2014 FULL INTELLIGENCE REPORT
+${D}
+Complete structured research output across all 6 Dimensions. Professional, consultative tone. No vague generalizations \u2014 every insight must be specific to ${co} and ${name}. Clearly label all CONFIRMED vs. INFERRED information.
+
+${D}
+SECTION C \u2014 MOCK CALL PITCH GUIDE
+${D}
+A natural, conversational talking guide \u2014 not a word-for-word script. Structured in three time-bound segments with content drawn directly from the research above:
+
+[0\u20132 MINUTES] \u2014 OPENING & CREDIBILITY HOOK
+Goal: Establish why you are calling, demonstrate preparation, earn 3 more minutes.
+Tone: Warm, confident, precise. Reference one specific, non-obvious research finding.
+Include: A personalized opener tied to something from LinkedIn or recent company news.
+Avoid: \u201cI wanted to touch base\u201d / \u201cI came across your profile\u201d / any generic opener.
+
+[2\u20134 MINUTES] \u2014 VALUE FRAMING & DISCOVERY
+Goal: Connect Antal\u2019s relevance to their actual situation. Ask 1\u20132 targeted questions to surface need.
+Tone: Consultative peer. You are exploring alignment, not presenting a pitch deck.
+Include: One GCC or India-specific hook tailored to their research profile.
+Aim for: ${name} speaking 60\u201370% of the time in this window.
+
+[4\u20136 MINUTES] \u2014 POSITIONING & NEXT STEP
+Goal: Anchor Antal as the strategic hiring partner for their India or GCC ambitions. Propose a low-friction next step.
+Tone: Collaborative problem-solver. Close with curiosity, not pressure.
+Include: One specific, easy-to-accept call to action.
+
+${d}
+3 CALL OBJECTIVES
+Define exactly what success looks like at the end of this conversation. Be specific \u2014 not \u201cbuild rapport\u201d but e.g., \u201cConfirm whether ${co} has an active or planned GCC in India\u201d / \u201cSecure a 30-minute capability briefing with ${name} or their TA lead\u201d / \u201cIdentify the internal hiring stakeholder and get an intro commitment.\u201d
+</output_format>`;
+}
+</script>
+</body>
+</html>
